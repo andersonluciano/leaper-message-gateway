@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const RedpandaProducer = require('./src/kafka/producer');
 const webhooksRouter = require('./src/routes/webhooks');
+const polichatRouter = require('./src/routes/polichat');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -78,6 +79,7 @@ app.get('/health', (req, res) => {
 
 // Rotas de webhook
 app.use('/v1', webhooksRouter);
+app.use('/v1', polichatRouter);
 
 // Tratamento de rotas nao encontradas
 app.use((req, res) => {
@@ -103,6 +105,7 @@ async function startServer() {
       console.log(`>> Modo: ${process.env.NODE_ENV || 'development'}`);
       console.log(`>> PID: ${process.pid}`);
       console.log(`>> Webhook endpoint: http://localhost:${PORT}/v1/evolution-messages/:uuid`);
+      console.log(`>> Polichat endpoint: http://localhost:${PORT}/v1/polichat-messages/:uuid?apiKey=YOUR_KEY`);
       console.log(`>> Health check: http://localhost:${PORT}/health`);
       console.log(`${'='.repeat(50)}\n`);
 
